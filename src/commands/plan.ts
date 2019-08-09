@@ -6,8 +6,10 @@ import { Runner, TerraformExecutable } from "../runner";
 import { Command, CommandType } from "./command";
 
 export class PlanCommand extends Command {
+  public static readonly CommandName = "show-plan";
+
   constructor(private runner: Runner, private index: IndexAdapter, ctx: vscode.ExtensionContext) {
-    super("show-plan", ctx, CommandType.PALETTE);
+    super(PlanCommand.CommandName, ctx, CommandType.PALETTE);
   }
 
   protected async perform(...args: any[]): Promise<any> {
@@ -42,7 +44,7 @@ export class PlanCommand extends Command {
       }
       return executable;
     } else {
-      let executable = this.runner.defaultExecutable
+      let executable = this.runner.defaultExecutable;
       if (!executable) {
         throw new Error(`No terraform executable available`);
       }

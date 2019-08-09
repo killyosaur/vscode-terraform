@@ -3,7 +3,7 @@
   "name": "terraform",
   "displayName": "Terraform",
   "description": "Syntax highlighting, linting, formatting, and validation for Hashicorp's Terraform",
-  "version": "1.3.12",
+  "version": "1.4.9999-dev",
   "publisher": "mauve",
   "license": "BSD-3-Clause",
   "engines": {
@@ -23,12 +23,7 @@
     "onLanguage:terraform",
     "onCommand:terraform.validate",
     "onCommand:terraform.lint",
-    "onCommand:terraform.reindex",
     "onCommand:terraform.preview-graph",
-    "onCommand:terraform.showReferences",
-    "onCommand:terraform.index-document",
-    "onCommand:terraform.navigate-to-section",
-    "onCommand:terraform.show-plan",
     "onView:terraform-modules",
     "workspaceContains:**/*.tf"
   ],
@@ -67,28 +62,6 @@
         }
       ]
     },
-    "commands": [
-      {
-        "command": "terraform.validate",
-        "title": "Terraform: Validate"
-      },
-      {
-        "command": "terraform.lint",
-        "title": "Terraform: Lint"
-      },
-      {
-        "command": "terraform.reindex",
-        "title": "Terraform: Reindex terraform files"
-      },
-      {
-        "command": "terraform.preview-graph",
-        "title": "Terraform: Preview Graph"
-      },
-      {
-        "command": "terraform.show-plan",
-        "title": "Terraform: Show Plan"
-      }
-    ],
     "languages": [
       {
         "id": "terraform",
@@ -108,6 +81,36 @@
         "extensions": [
           ".tfstate"
         ]
+      }
+    ],
+    "commands": [
+      {
+        "command": "terraform.lint",
+        "title": "Terraform: Lint"
+      },
+      {
+        "command": "terraform.installLanguageServer",
+        "title": "Terraform: Install/Update Language Server"
+      },
+      {
+        "command": "terraform.toggleLanguageServer",
+        "title": "Terraform: Enable/Disable Language Server"
+      },
+      {
+        "command": "terraform.validate",
+        "title": "Terraform: Validate"
+      },
+      {
+        "command": "terraform.reindex",
+        "title": "Terraform: Reindex terraform files"
+      },
+      {
+        "command": "terraform.preview-graph",
+        "title": "Terraform: Preview Graph"
+      },
+      {
+        "command": "terraform.show-plan",
+        "title": "Terraform: Show Plan"
       }
     ],
     "grammars": [
@@ -198,7 +201,7 @@
           },
           "default": {
             "enabled": true,
-            "liveIndexing": true,
+            "liveIndexing": false,
             "delay": 500,
             "exclude": [
               ".terraform/**/*",
@@ -206,6 +209,39 @@
             ]
           },
           "description": "Indexes all terraform sources to get live syntax errors, rename support, go to symbol, and much more..."
+        },
+        "terraform.languageServer": {
+          "type": "object",
+          "properties": {
+            "enabled": {
+              "type": "boolean",
+              "description": "Enables or disables the indexing",
+              "default": false
+            },
+            "installCommonProviders": {
+              "type": "boolean",
+              "description": "To aid intellisense this automatically installs common providers for the LSP",
+              "default": true
+            },
+            "args": {
+              "type": "array",
+              "description": "Arguments to pass to the language server",
+              "default": []
+            },
+            "pathToBinary": {
+              "type": [
+                "string",
+                "null"
+              ],
+              "description": "The path to an existing binary for the Language Server. This allows users to run custom builds rather than download pre-build releases",
+              "default": null
+            }
+          },
+          "default": {
+            "enabled": false,
+            "args": []
+          },
+          "description": "Configures how the language server runs and works"
         },
         "terraform.codelens.enabled": {
           "type": "boolean",
@@ -225,6 +261,8 @@
     "compile": "gulp compile",
     "watch": "gulp watch",
     "gulp": "gulp",
+    "tslint": "tslint --project ./",
+    "tslint-fix": "tslint --project ./ --fix",
     "vscode:prepublish": "npm install --no-save && npm run gulp -- --require-appinsights-key",
     "test": "gulp test",
     "integration-test": "node ./out/test/run-test.js",
@@ -235,7 +273,7 @@
     "@types/lodash": "^4.14.136",
     "@types/minimatch": "^3.0.3",
     "@types/mocha": "^2.2.48",
-    "@types/node": "^6.14.7",
+    "@types/node": "^8.5.0",
     "@types/uuid": "^3.4.5",
     "@types/vscode": "^1.36.0",
     "chalk": "^2.4.2",
@@ -257,16 +295,21 @@
     "source-map-support": "^0.5.12",
     "ts-node": "^7.0.1",
     "tslint": "^5.18.0",
-    "typescript": "^2.9.2",
+    "typescript": "^3.0.0",
     "vscode-test": "^1.0.2"
   },
   "dependencies": {
-    "applicationinsights": "^1.4.0",
+    "@octokit/rest": "^16.28.4",
+    "applicationinsights": "^1.0.5",
+    "glob": "^7.1.4",
     "graphlib-dot": "^0.6.2",
     "lodash": "^4.17.15",
     "minimatch": "^3.0.4",
+    "tar": "^4.4.10",
+    "typed-rest-client": "^1.5.0",
     "uuid": "^3.3.2",
     "viz.js": "^1.8.2",
+    "vscode-languageclient": "^5.2.1",
     "vscode-uri": "^1.0.8"
   }
 }
